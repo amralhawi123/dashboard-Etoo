@@ -53,7 +53,6 @@ const ClickOnAnyPointInPage=()=>{
   setShowMessage('')  
   setShowNoti('')
 }
-
   return (
     <div className="App"> 
       <SideBar showside={showside} />
