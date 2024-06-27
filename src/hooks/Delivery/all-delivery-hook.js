@@ -1,6 +1,25 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import product1 from "../../imgs/product-01.png" 
+import { getAllDelivery } from '../../redux/actions/DeliveryAction'
+import { useDispatch, useSelector } from 'react-redux'
 const AllDeliveryHook = () => { 
+    const token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2FwaS5ldG9vbGFicy5jb20vdjMvcHVibGljL2NwYW5lbC9sb2dpbiIsImlhdCI6MTcxOTUwOTA5MCwiZXhwIjoxNzE5NTEyNjkwLCJuYmYiOjE3MTk1MDkwOTAsImp0aSI6IlNCVW5hRjI4Q3hQTklyNG0iLCJzdWIiOiIxNiIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.imviaW-lTM6_U-O3nFNCKoprRuF05UoFSyS4RNvSHDI"
+    const dispatch = useDispatch()
+    const [loading,setLoading] = useState(false)
+
+    useEffect( () => {
+        const getData = async ()=>{
+            // const formData= new FormData()
+            // formData.append("token", token)
+            setLoading(false)
+            await dispatch(getAllDelivery()) 
+            setLoading(true)
+        }
+        getData()
+    }, [])
+    const delivery = useSelector(state => state.allDeliver.delivery) 
+    if(delivery)
+console.log(delivery)
 
     function headData(name) {
         return { name};
