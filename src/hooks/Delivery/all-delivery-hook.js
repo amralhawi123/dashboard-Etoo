@@ -1,25 +1,47 @@
 import React, { useEffect, useState } from 'react'
 import product1 from "../../imgs/product-01.png" 
-import { getAllDelivery } from '../../redux/actions/DeliveryAction'
+import { getAllDelivery, getAllDeliveryPage } from '../../redux/actions/DeliveryAction'
 import { useDispatch, useSelector } from 'react-redux'
 const AllDeliveryHook = () => { 
-    const token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2FwaS5ldG9vbGFicy5jb20vdjMvcHVibGljL2NwYW5lbC9sb2dpbiIsImlhdCI6MTcxOTUwOTA5MCwiZXhwIjoxNzE5NTEyNjkwLCJuYmYiOjE3MTk1MDkwOTAsImp0aSI6IlNCVW5hRjI4Q3hQTklyNG0iLCJzdWIiOiIxNiIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ.imviaW-lTM6_U-O3nFNCKoprRuF05UoFSyS4RNvSHDI"
+    const token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2FwaS5ldG9vbGFicy5jb20vdjMvcHVibGljL2NwYW5lbC9sb2dpbiIsImlhdCI6MTcxOTUyODQ0MSwiZXhwIjoxNzE5NTMyMDQxLCJuYmYiOjE3MTk1Mjg0NDEsImp0aSI6ImJsT2kwWmd1VGxneGcxZVMiLCJzdWIiOiIxNiIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ._QFajnvs7tpEPIEWA94W9ZxDyFrvRlHjE2Q21nF4w2E"
     const dispatch = useDispatch()
     const [loading,setLoading] = useState(false)
 
     useEffect( () => {
         const getData = async ()=>{
-            // const formData= new FormData()
-            // formData.append("token", token)
+            const formData= new FormData()
+            formData.append("token", token)
             setLoading(false)
-            await dispatch(getAllDelivery()) 
+            await dispatch(getAllDelivery(formData)) 
             setLoading(true)
         }
         getData()
     }, [])
     const delivery = useSelector(state => state.allDeliver.delivery) 
-    if(delivery)
-console.log(delivery)
+
+    const onPress = async(page) => { 
+        dispatch(getAllDeliveryPage(page))
+     }
+
+let allDelivery = []
+try {      
+   if(delivery.data){
+    allDelivery = delivery.data
+   }else{
+    allDelivery= []
+    }
+} catch (error) {
+   
+}
+
+let pageCount = []
+try{
+    if(delivery.pagination){
+        pageCount = delivery.pagination.total
+}else{
+    pageCount=[]
+}
+}catch(e){} 
 
     function headData(name) {
         return { name};
@@ -33,14 +55,6 @@ console.log(delivery)
           headData('Transportation type'),  
           headData('Note'),  
           headData('Action'), 
-      ];
-    function createData(id,image,name,phone,transType,note) {
-        return { id ,image,name,phone,transType,note};
-      }
-
-      const rows = [
-        createData(1,<img style={{marginRight:"8px", width:"60px"}} src={product1} alt="brand1"/>,
-            'Amr', 233522,"car","any thing"),
       ];
 
       const handleOpen =(e) => {  
@@ -69,7 +83,7 @@ console.log(delivery)
   });
 
 
-  return [rows,head,handleOpen ]
+  return [head,handleOpen,pageCount,allDelivery,onPress ]
 }
 
 export default AllDeliveryHook

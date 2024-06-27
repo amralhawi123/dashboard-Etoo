@@ -19,7 +19,7 @@ const DeliveryTable = () => {
     const [OnhandleClick, show, handleClose,handleShow ] = DeleteDeliveryHook()
     const [ handleEdit, showEdit,handleCloseEdit,handleShowEdit ] = EditDeliveryHook()
     const [ handleAdd, showAdd,handleCloseAdd,handleShowAdd ] = AddDeliveryHook()
-    const [rows,head,handleOpen ] = AllDeliveryHook()
+    const [head,handleOpen,pageCount,allDelivery,onPress ] = AllDeliveryHook()
 
       return (
         
@@ -110,17 +110,17 @@ const DeliveryTable = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map((row) => (
+              {allDelivery.map((row) => (
                 <TableRow
                   key={row.id}
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
-                  <TableCell ><p>{row.id}</p> </TableCell>
-                  <TableCell >{row.image}</TableCell>
-                  <TableCell  ><p>{row.name}</p> </TableCell> 
-                  <TableCell  ><p>{row.phone}</p> </TableCell> 
-                  <TableCell  ><p>{row.transType}</p> </TableCell> 
-                  <TableCell  ><p>{row.note}</p> </TableCell> 
+                  <TableCell ><p>{row.ID}</p> </TableCell>
+                  <TableCell ><img style={{marginRight:"8px", width:"60px"}} src={row.Image} alt="brand1"/></TableCell>
+                  <TableCell  ><p>{row.Name}</p> </TableCell> 
+                  <TableCell  ><p>{row.Phone}</p> </TableCell> 
+                  <TableCell  ><p>{row.Transportation_type}</p> </TableCell> 
+                  <TableCell  ><p>{row.Note}</p> </TableCell> 
                   <TableCell  >
                   <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
@@ -194,7 +194,7 @@ const DeliveryTable = () => {
                   <p>Showing 1 to 10 of 137 entries</p>
               </div>
               <div>
-          <Pagenation pageCount={rows.length}/>
+          <Pagenation pageCount={pageCount} onPress={onPress}/>
               </div>
           </div>
         </TableContainer>
