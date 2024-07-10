@@ -38,7 +38,7 @@ export const geLimitDeliveryInPage = (limit,formData) => async (dispatch) => {
 export const getAllDeliveryPage = (page,formData) => async (dispatch) => {
   try {
     const respons = await usePostData(`/v3/public/cpanel/delivery?page=${page}&perpage=5`,formData);
-    console.log(respons);
+
     dispatch({
       type: GET_ALL_DELIVERY,
       payload: respons,
@@ -103,7 +103,7 @@ export const editDeliveryAction = (id,formData) => async (dispatch) => {
 export const getOnDeliveryAction = (id,formData) => async (dispatch) => {
   try {
     const respons = await usePostData(`/v3/public/cpanel/getdelivery/${id}`,formData);
-    console.log(respons)
+
     dispatch({
       type: GET_ONE_DELIVERY,
       payload: respons,

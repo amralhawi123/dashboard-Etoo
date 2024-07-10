@@ -33,7 +33,7 @@ const onSubmit = async () => {
 }
 
 const res = useSelector(state => state.authReducer.loginUser)
-console.log(res)
+
 useEffect(() => {
     if(loading === false){
        if(res){ 
@@ -41,9 +41,9 @@ useEffect(() => {
              localStorage.setItem("token", res["auth-token"])
              localStorage.setItem("userData", JSON.stringify(res.user) ) 
              notify("تم تسجيل الدخول بنجاح", "success")
-            //   setTimeout(() => {
-            //        window.location.href='/'
-            //     }, 2000);
+              setTimeout(() => {
+                   window.location.href='/'
+                }, 2000);
             } else {
                localStorage.removeItem("token" )
                localStorage.removeItem("userData" )

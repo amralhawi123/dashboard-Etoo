@@ -75,7 +75,7 @@ const SideBar = ({showside} ) => {
             <h5 style={{color:"white"}}>Offers</h5>
             </li>
             </Link>
-            <Link to='/delivery'>
+            <Link to='/delivery' >
             <li className='side-link'>
             <i class="fa-solid fa-truck" style={{fontSize:"20px"}}></i>
             <h5 style={{color:"white"}}>Delivery boys</h5>

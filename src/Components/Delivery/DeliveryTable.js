@@ -23,7 +23,8 @@ const DeliveryTable = () => {
     const [ handleAdd, showAdd,handleCloseAdd,handleShowAdd,name,transType,phone,note,
       onChangName,onChangTransType,onChangPhone,onChangNote,onChangImage
      ] = AddDeliveryHook()
-    const [head,handleOpen,pageCount,allDelivery,getPage,showNumber,OnChangeShowNumber,numberEnteris,loading ] = AllDeliveryHook()
+    const [head,handleOpen,pageCount,allDelivery,getPage,showNumber,
+      OnChangeShowNumber,numberEnteris,loading,delivery ] = AllDeliveryHook()
 
       return (
         

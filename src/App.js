@@ -22,12 +22,13 @@ import NavBar from "./Components/uitlity/NavBar";
 import AboutPage from "./pages/Setting/AboutPage";
 import TransportionPage from "./pages/Setting/TransportionPage";
 import ProfilePage from "./pages/Profile/ProfilePage"; 
-import LoginPages from "./pages/auth/LoginPages";
-import LoginHook from "./hooks/utility/login-hook";
+import LoginPages from "./pages/auth/LoginPages"; 
+import AllDeliveryHook from "./hooks/Delivery/all-delivery-hook";
 
 function App() { 
   const [t, i18n] = useTranslation();
-  const  [, , , , , , ,res]= LoginHook()
+  const [,,,,,,,,,delivery ] = AllDeliveryHook()
+
   const [showMessage,setShowMessage]=useState('')
   const [showNoti,setShowNoti]=useState('')
   const [showside,setShowside] = useState("")
@@ -58,6 +59,10 @@ const ClickOnAnyPointInPage=()=>{
 
   return (
     <div className="App">
+      {
+        delivery.msg === "Unauthenticated user" ? <LoginPages/>
+        :
+        <>
         <SideBar showside={showside} />
         <div className="main-content full-width">
           <NavBar handleClose={handleClose}
@@ -67,7 +72,7 @@ const ClickOnAnyPointInPage=()=>{
            showMessage={showMessage} showNoti={showNoti} handleOpenMessage={handleOpenMessage}/>
           <div onClick={ClickOnAnyPointInPage} className="content-pages">
           <Routes>  
-            <Route path="/login" element={<LoginPages/>} />
+            {/* <Route path="/login" element={<LoginPages/>} /> */}
             <Route path="/" element={<EcommercePage/>} />
             <Route path="/analytics" element={<AnalyticsPage />} />
             <Route path="/marketing" element={<MarketingPage />} />
@@ -88,6 +93,8 @@ const ClickOnAnyPointInPage=()=>{
           </Routes>
           </div>
         </div>
+        </>
+              }
     </div>
 
   );

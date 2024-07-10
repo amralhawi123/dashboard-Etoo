@@ -22,6 +22,9 @@ const AllDeliveryHook = () => {
     
     const OnChangeShowNumber= (e) => { 
         localStorage.setItem("showNumb", e.target.value)
+        setTimeout(() => {
+            window.location.reload(false)
+        }, 1000);
     }
     
       // at click pagination
@@ -40,7 +43,7 @@ const AllDeliveryHook = () => {
         }
         
         const delivery = useSelector(state => state.allDeliver.delivery) 
-        console.log(delivery)
+
 let allDelivery = []
 try {      
    if(delivery.data){
@@ -110,7 +113,7 @@ try{
   });
 
 
-  return [head,handleOpen,pageCount,allDelivery,getPage,showNumber,OnChangeShowNumber,numberEnteris,loading ]
+  return [head,handleOpen,pageCount,allDelivery,getPage,showNumber,OnChangeShowNumber,numberEnteris,loading,delivery ]
 }
 
 export default AllDeliveryHook
