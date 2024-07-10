@@ -134,6 +134,57 @@ tbody tr:hover{
     background-color: var(--scond-color);
     transition: var(--main-transtion);
 }
+
+/* start login and register style */
+.login-page{
+    background-color: rgb(26 34 44 / 1);
+    height:100vh
+    
+}
+.user-input {
+    box-sizing: border-box;
+    height: 37px;
+    width: 370px;
+    border: 1px solid #979797;
+    border-radius: 8px;
+  }
+  
+  .title-login {
+    color: var(--scond-color); 
+    font-size: 25px;  
+    font-weight: bold;
+  }
+  .sub-title {
+    color: var(--scond-color);  
+    font-weight: bold;
+  }
+  .btn-login {
+    height: 46px;
+    width: 370px;
+    border-radius: 9px;
+    font-weight: bold;
+    border: none;
+    color: white;
+    background-color: var(--main-color);
+  }
+  .btn-login:hover {
+    color: rgb(206, 204, 204);
+  }
+  
+  @media (max-width:992px) {
+    .user-input,.btn-login  { 
+      height: 35px;
+      width: 300px; 
+    }
+  }
+  @media (max-width:576px) {
+    .user-input,.btn-login  { 
+      height: 35px;
+      width: 275px; 
+    }
+  }
+  /* end login and register */
+  
 /* start side-bar */
 .side-bar{
     height: 100%;

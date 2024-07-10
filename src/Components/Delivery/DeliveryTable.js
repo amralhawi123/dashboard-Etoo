@@ -9,17 +9,21 @@ import Paper from '@mui/material/Paper';
 import edit from '../../imgs/edit.png';
 import dlete from '../../imgs/delete.png'; 
 import Pagenation from '../uitlity/Pagination';
-import { Button, Modal } from 'react-bootstrap';         
+import { Button, Modal, Spinner } from 'react-bootstrap';         
 import DeleteDeliveryHook from '../../hooks/Delivery/delete-delivery-hook';
 import EditDeliveryHook from '../../hooks/Delivery/edit-delivery-hook';
 import AddDeliveryHook from '../../hooks/Delivery/add-delivery-hook';
 import AllDeliveryHook from '../../hooks/Delivery/all-delivery-hook';
+import { ToastContainer } from "react-toastify";
 
 const DeliveryTable = () => {
     const [OnhandleClick, show, handleClose,handleShow ] = DeleteDeliveryHook()
-    const [ handleEdit, showEdit,handleCloseEdit,handleShowEdit ] = EditDeliveryHook()
-    const [ handleAdd, showAdd,handleCloseAdd,handleShowAdd ] = AddDeliveryHook()
-    const [head,handleOpen,pageCount,allDelivery,onPress ] = AllDeliveryHook()
+    const [ handleEdit, showEdit,handleCloseEdit,handleShowEdit,nameEdit,transTypeEdit,phoneEdit,noteEdit,
+      onChangNameEdit,onChangTransTypeEdit,onChangPhoneEdit,onChangNoteEdit,onImageChangeEdit ] = EditDeliveryHook()
+    const [ handleAdd, showAdd,handleCloseAdd,handleShowAdd,name,transType,phone,note,
+      onChangName,onChangTransType,onChangPhone,onChangNote,onChangImage
+     ] = AddDeliveryHook()
+    const [head,handleOpen,pageCount,allDelivery,getPage,showNumber,OnChangeShowNumber,numberEnteris,loading ] = AllDeliveryHook()
 
       return (
         
@@ -32,19 +36,20 @@ const DeliveryTable = () => {
           <div className='edit-message'>
                 <div className='mt-2 d-flex align-items-center gap-2'>
                 <p style={{marginRight:"10px"}}>Name:-</p>
-                <input type='text' placeholder='Product Name'/>
+                <input type='text' placeholder='Product Name' value={name} onChange={onChangName}/>
                     </div>
                     <div className='mt-2 d-flex align-items-center gap-2'>
                 <p style={{marginRight:"10px"}}>Phone:-</p>
-                <input type='text' placeholder='Product Description'/>
+                <input type='text' placeholder='Product Description' value={phone} onChange={onChangPhone}/>
                     </div>
                     <div className='mt-2 d-flex align-items-center gap-2'>
                 <p style={{marginRight:"10px"}}>Note:-</p>
-                <input type='text' placeholder='Product Description'/>
+                <input type='text' placeholder='Product Description' value={note} onChange={onChangNote}/>
                     </div>
                     <div className='mt-2 d-flex align-items-center gap-2'>
                 <p style={{marginRight:"10px"}}>Transportation Type:-</p>
-                <select name='status' id='status'>
+                <select name='status' id='status' value={transType} onChange={onChangTransType}>
+                <option>Select Transportion type</option>
                     <option>car</option>
                     <option>bus</option>
                     <option>taxi</option> 
@@ -52,7 +57,7 @@ const DeliveryTable = () => {
                     </div>
                     <div className='mt-2 d-flex align-items-center gap-2'>
                 <p style={{marginRight:"10px"}}>Image:-</p>
-                <input type='file'  />
+                <input type='file' onChange={onChangImage} />
                     </div>
               </div>
           </Modal.Body>
@@ -74,11 +79,11 @@ const DeliveryTable = () => {
            <div className=' d-flex align-items-center justify-content-between'>
               <div className='show-number p-2 m-2 d-flex align-items-center'>
                   <p style={{marginRight:"10px"}}>Show</p>
-                  <select name='number' id='numb'>
+                  <select name='number' id='numb' value={showNumber} onChange={OnChangeShowNumber}>
+                      <option>5</option>
                       <option>10</option>
-                      <option>25</option>
-                      <option>50</option>
-                      <option>100</option>
+                      <option>20</option>
+                      <option>30</option>
                   </select>
                   <p style={{marginLeft:"10px"}}>entries</p>
               </div>
@@ -110,9 +115,12 @@ const DeliveryTable = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {allDelivery.map((row) => (
+              {
+                loading === false ?
+                allDelivery.length > 0 ? 
+              allDelivery.map((row) => (
                 <TableRow
-                  key={row.id}
+                  key={row.ID}
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
                   <TableCell ><p>{row.ID}</p> </TableCell>
@@ -144,19 +152,20 @@ const DeliveryTable = () => {
           <div className='edit-message'>
                 <div className='mt-2 d-flex align-items-center gap-2'>
                 <p style={{marginRight:"10px"}}>Name:-</p>
-                <input type='text' placeholder='Product Name'/>
+                <input type='text' placeholder='Product Name' value={nameEdit} onChange={onChangNameEdit}/>
                     </div>
                     <div className='mt-2 d-flex align-items-center gap-2'>
                 <p style={{marginRight:"10px"}}>Phone:-</p>
-                <input type='text' placeholder='Product Description'/>
+                <input type='text' placeholder='Product Description' value={phoneEdit} onChange={onChangPhoneEdit}/>
                     </div>
                     <div className='mt-2 d-flex align-items-center gap-2'>
                 <p style={{marginRight:"10px"}}>Note:-</p>
-                <input type='text' placeholder='Product Description'/>
+                <input type='text' placeholder='Product Description' value={noteEdit} onChange={onChangNoteEdit}/>
                     </div>
                     <div className='mt-2 d-flex align-items-center gap-2'>
                 <p style={{marginRight:"10px"}}>Transportation Type:-</p>
-                <select name='status' id='status'>
+                <select name='status' id='status' value={transTypeEdit} onChange={onChangTransTypeEdit}>
+                    <option>Select Transportion type</option>
                     <option>car</option>
                     <option>bus</option>
                     <option>taxi</option> 
@@ -164,7 +173,7 @@ const DeliveryTable = () => {
                     </div>
                     <div className='mt-2 d-flex align-items-center gap-2'>
                 <p style={{marginRight:"10px"}}>Image:-</p>
-                <input type='file'  />
+                <input type='file'  onChange={onImageChangeEdit}/>
                     </div>
               </div>
           </Modal.Body>
@@ -172,32 +181,34 @@ const DeliveryTable = () => {
             <Button variant="dark" onClick={handleCloseEdit}>
               Close
             </Button>
-            <Button variant="danger" onClick={handleEdit}>
+            <Button variant="danger" onClick={()=>handleEdit(row.ID)}>
               Update
             </Button>
           </Modal.Footer>
         </Modal>
                   <div style={{position:"relative"}}>
-                <i class='fa-solid fa-ellipsis icon-box' onClick={()=>handleOpen(row.id)}></i>
-                <div className='box-edit' id={row.id} style={{zIndex:"100"}}>   
-                    <p onClick={handleShowEdit}><img src={edit} style={{width:"18px",height:"18px", marginRight:"8px"}} alt='edit'/> Edit</p>
-                    <p onClick={handleShow}><img src={dlete} style={{width:"18px",height:"18px", marginRight:"8px"}} alt='delete'/>Delete</p>
+                <i class='fa-solid fa-ellipsis icon-box' onClick={()=>handleOpen(row.ID)}></i>
+                <div className='box-edit' id={row.ID} style={{zIndex:"100"}}>   
+                    <p onClick={()=>handleShowEdit(row.ID)}><img src={edit} style={{width:"18px",height:"18px", marginRight:"8px"}} alt='edit'/> Edit</p>
+                    <p onClick={()=>handleShow(row.ID)}><img src={dlete} style={{width:"18px",height:"18px", marginRight:"8px"}} alt='delete'/>Delete</p>
                   </div>
                   </div>
                    </TableCell>
                 </TableRow>
-              ))}
+              )) : <div>There is no data found</div>
+            : <Spinner animation="border" variant="primary" className='m-3'/>}
             </TableBody>
           </Table>
           <div className='px-3 d-flex align-items-center justify-content-between'>
               <div>
-                  <p>Showing 1 to 10 of 137 entries</p>
+                  <p>Showing 1 to {showNumber} of {numberEnteris} entries</p>
               </div>
               <div>
-          <Pagenation pageCount={pageCount} onPress={onPress}/>
+          <Pagenation pageCount={pageCount} onPress={getPage}/>
               </div>
           </div>
-        </TableContainer>
+          <ToastContainer/>
+        </TableContainer> 
       );
     }
 

@@ -35,6 +35,7 @@ const AllProductsHook = () => {
       ];
 
       const handleOpen =(e) => {  
+        console.log(e)
         hideAllMenus()
         let box = document.getElementById(e) 
         if (box.style.display === "block") { 

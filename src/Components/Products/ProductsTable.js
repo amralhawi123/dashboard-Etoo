@@ -198,7 +198,7 @@ const ProductsTable = () => {
                     <p ><i class=" fa-solid fa-plus" style={{ marginRight:"8px"}}></i> Add Attribute</p> 
                     <p onClick={clickToAddImage}><i class=" fa-solid fa-plus" style={{ marginRight:"8px"}}></i> Add Images</p> 
                     <p onClick={handleShowEdit}><img src={edit} style={{width:"18px",height:"18px", marginRight:"8px"}} alt='edit'/> Edit</p>
-                    <p onClick={handleShow}><img src={dlete} style={{width:"18px",height:"18px", marginRight:"8px"}} alt='delete'/>Delete</p>
+                    <p onClick={()=>handleShow(row.id)}><img src={dlete} style={{width:"18px",height:"18px", marginRight:"8px"}} alt='delete'/>Delete</p>
                   </div>
                   </div>
                    </TableCell>

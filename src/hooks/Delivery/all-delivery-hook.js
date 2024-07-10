@@ -1,28 +1,46 @@
-import React, { useEffect, useState } from 'react'
-import product1 from "../../imgs/product-01.png" 
-import { getAllDelivery, getAllDeliveryPage } from '../../redux/actions/DeliveryAction'
+import { useEffect, useState } from 'react' 
+import { geLimitDeliveryInPage, getAllDelivery, getAllDeliveryPage } from '../../redux/actions/DeliveryAction'
 import { useDispatch, useSelector } from 'react-redux'
+
 const AllDeliveryHook = () => { 
-    const token = "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJpc3MiOiJodHRwczovL2FwaS5ldG9vbGFicy5jb20vdjMvcHVibGljL2NwYW5lbC9sb2dpbiIsImlhdCI6MTcxOTUyODQ0MSwiZXhwIjoxNzE5NTMyMDQxLCJuYmYiOjE3MTk1Mjg0NDEsImp0aSI6ImJsT2kwWmd1VGxneGcxZVMiLCJzdWIiOiIxNiIsInBydiI6IjIzYmQ1Yzg5NDlmNjAwYWRiMzllNzAxYzQwMDg3MmRiN2E1OTc2ZjcifQ._QFajnvs7tpEPIEWA94W9ZxDyFrvRlHjE2Q21nF4w2E"
+    const token = localStorage.getItem("token")
     const dispatch = useDispatch()
-    const [loading,setLoading] = useState(false)
+    const [loading,setLoading] = useState(true)
+    const [showNumber,setShowNumber] = useState(localStorage.getItem("showNumb"))
 
     useEffect( () => {
         const getData = async ()=>{
             const formData= new FormData()
             formData.append("token", token)
-            setLoading(false)
-            await dispatch(getAllDelivery(formData)) 
             setLoading(true)
+            await dispatch(getAllDelivery(formData)) 
+            setLoading(false)
         }
         getData()
+        getLimit(showNumber)
     }, [])
-    const delivery = useSelector(state => state.allDeliver.delivery) 
-
-    const onPress = async(page) => { 
-        dispatch(getAllDeliveryPage(page))
+    
+    const OnChangeShowNumber= (e) => { 
+        localStorage.setItem("showNumb", e.target.value)
+    }
+    
+      // at click pagination
+      const getPage = (page) => {
+        const formData= new FormData()
+        formData.append("token", token)
+          dispatch(getAllDeliveryPage(page,formData))  
      }
 
+      // limit delvery
+      const getLimit = async(limit) => {
+        const formData= new FormData()
+        formData.append("token", token)
+         await dispatch(geLimitDeliveryInPage(limit,formData))
+        
+        }
+        
+        const delivery = useSelector(state => state.allDeliver.delivery) 
+        console.log(delivery)
 let allDelivery = []
 try {      
    if(delivery.data){
@@ -37,9 +55,18 @@ try {
 let pageCount = []
 try{
     if(delivery.pagination){
-        pageCount = delivery.pagination.total
+        pageCount = delivery.pagination["last_page"]
 }else{
     pageCount=[]
+}
+}catch(e){} 
+
+let numberEnteris = []
+try{
+    if(delivery.pagination){
+        numberEnteris = delivery.pagination.total
+}else{
+    numberEnteris=[]
 }
 }catch(e){} 
 
@@ -83,7 +110,7 @@ try{
   });
 
 
-  return [head,handleOpen,pageCount,allDelivery,onPress ]
+  return [head,handleOpen,pageCount,allDelivery,getPage,showNumber,OnChangeShowNumber,numberEnteris,loading ]
 }
 
 export default AllDeliveryHook

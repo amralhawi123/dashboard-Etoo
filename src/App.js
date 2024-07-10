@@ -21,11 +21,13 @@ import CategoryPage from "./pages/Setting/CategoryPage";
 import NavBar from "./Components/uitlity/NavBar";
 import AboutPage from "./pages/Setting/AboutPage";
 import TransportionPage from "./pages/Setting/TransportionPage";
-import ProfilePage from "./pages/Profile/ProfilePage";
+import ProfilePage from "./pages/Profile/ProfilePage"; 
+import LoginPages from "./pages/auth/LoginPages";
+import LoginHook from "./hooks/utility/login-hook";
 
 function App() { 
   const [t, i18n] = useTranslation();
-  
+  const  [, , , , , , ,res]= LoginHook()
   const [showMessage,setShowMessage]=useState('')
   const [showNoti,setShowNoti]=useState('')
   const [showside,setShowside] = useState("")
@@ -53,38 +55,41 @@ const ClickOnAnyPointInPage=()=>{
   setShowMessage('')  
   setShowNoti('')
 }
+
   return (
-    <div className="App"> 
-      <SideBar showside={showside} />
-      <div className="main-content full-width">
-        <NavBar handleClose={handleClose}
-        showside={showside}
-        handleOpen={handleOpen}
-         handleOpenNoti={handleOpenNoti} 
-         showMessage={showMessage} showNoti={showNoti} handleOpenMessage={handleOpenMessage}/>
-        <div onClick={ClickOnAnyPointInPage} className="content-pages">
-        <Routes>
-          <Route path="/" element={<EcommercePage/>} />
-          <Route path="/analytics" element={<AnalyticsPage />} />
-          <Route path="/marketing" element={<MarketingPage />} />
-          <Route path="/orders" element={<OrdersPage />} />
-          <Route path="/message" element={<MessagePage />} />
-          <Route path="/products" element={<ProductsPage />} />
-          <Route path="/products-images/id" element={<AddProductImagesPage />} />
-          <Route path="/offer" element={<OfferPage />} />
-          <Route path="/offer-product/id" element={<ShowOfferProductPage />} />
-          <Route path="/delivery" element={<DeliveryBoysPage />} />
-          <Route path="/map" element={<MapsPage />} />
-          <Route path="/setting" element={<SettingPage />} />
-          <Route path="/welcome" element={<WelcomePage />} />
-          <Route path="/category" element={<CategoryPage />} />
-          <Route path="/about" element={<AboutPage />} />
-          <Route path="/transportion" element={<TransportionPage />} />
-          <Route path="/profile" element={<ProfilePage />} />
-        </Routes>
+    <div className="App">
+        <SideBar showside={showside} />
+        <div className="main-content full-width">
+          <NavBar handleClose={handleClose}
+          showside={showside}
+          handleOpen={handleOpen}
+           handleOpenNoti={handleOpenNoti} 
+           showMessage={showMessage} showNoti={showNoti} handleOpenMessage={handleOpenMessage}/>
+          <div onClick={ClickOnAnyPointInPage} className="content-pages">
+          <Routes>  
+            <Route path="/login" element={<LoginPages/>} />
+            <Route path="/" element={<EcommercePage/>} />
+            <Route path="/analytics" element={<AnalyticsPage />} />
+            <Route path="/marketing" element={<MarketingPage />} />
+            <Route path="/orders" element={<OrdersPage />} />
+            <Route path="/message" element={<MessagePage />} />
+            <Route path="/products" element={<ProductsPage />} />
+            <Route path="/products-images/id" element={<AddProductImagesPage />} />
+            <Route path="/offer" element={<OfferPage />} />
+            <Route path="/offer-product/id" element={<ShowOfferProductPage />} />
+            <Route path="/delivery" element={<DeliveryBoysPage />} />
+            <Route path="/map" element={<MapsPage />} />
+            <Route path="/setting" element={<SettingPage />} />
+            <Route path="/welcome" element={<WelcomePage />} />
+            <Route path="/category" element={<CategoryPage />} />
+            <Route path="/about" element={<AboutPage />} />
+            <Route path="/transportion" element={<TransportionPage />} />
+            <Route path="/profile" element={<ProfilePage />} />
+          </Routes>
+          </div>
         </div>
-      </div>
     </div>
+
   );
 }
 
