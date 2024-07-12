@@ -35,9 +35,9 @@ export const geLimitDeliveryInPage = (limit,formData) => async (dispatch) => {
   }
 };
 // get all delivery for pagination
-export const getAllDeliveryPage = (page,formData) => async (dispatch) => {
+export const getAllDeliveryPage = (page,limit,formData) => async (dispatch) => {
   try {
-    const respons = await usePostData(`/v3/public/cpanel/delivery?page=${page}&perpage=5`,formData);
+    const respons = await usePostData(`/v3/public/cpanel/delivery?page=${page}&perpage=${limit}`,formData);
 
     dispatch({
       type: GET_ALL_DELIVERY,
@@ -107,6 +107,22 @@ export const getOnDeliveryAction = (id,formData) => async (dispatch) => {
     dispatch({
       type: GET_ONE_DELIVERY,
       payload: respons,
+    });
+  } catch (e) {
+    dispatch({
+      type: GET_ERROR,
+      payload: "Error " + e,
+    });
+  }
+};
+
+// Search Delivery
+export const getAllDeliverySearch = (name,formData) => async (dispatch) => {
+  try {
+    const respons = await usePostData(`/v3/public/cpanel/delivery${name}`, formData);
+    dispatch({
+      type: GET_ALL_DELIVERY,
+      payload: respons, 
     });
   } catch (e) {
     dispatch({

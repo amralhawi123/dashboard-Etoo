@@ -9,16 +9,21 @@ import Paper from '@mui/material/Paper';
 import edit from '../../imgs/edit.png';
 import dlete from '../../imgs/delete.png'; 
 import Pagenation from '../uitlity/Pagination';
-import { Button, Modal } from 'react-bootstrap';
+import { Button, Modal, Spinner } from 'react-bootstrap';
 import DeleteOrderHook from '../../hooks/Orders/delete-order-hook';  
 import EditOrderHook from '../../hooks/Orders/edit-order-hook';
-import AllOrderHook from './../../hooks/Orders/all-date-hook';
-
+import AllOrderHook from './../../hooks/Orders/all-order-hook';
+import { ToastContainer } from "react-toastify";
+import { Link } from 'react-router-dom';
+import ViewOrderSerachHook from '../../hooks/Orders/view-order-search-hook';
 
 const OrdersTable = () => {
   const [OnhandleClick, show, handleClose,handleShow ] = DeleteOrderHook()
-  const [ handleEdit, showEdit,handleCloseEdit,handleShowEdit ] = EditOrderHook()
-  const [rows,head,handleOpen ] = AllOrderHook()
+  const [ handleEdit, showEdit,handleCloseEdit,handleShowEdit,status ,OnChangeStatus] = EditOrderHook()
+  const [head,handleOpen,allOrders ,loading,pageCount,getPage,totalnumberOrders,
+    showNumberOrders,OnChangeShowNumber,showWord,OnChangeSearch,loadingSearch
+  ] = AllOrderHook()
+  // const [showWord,OnChangeSearch] = ViewOrderSerachHook()
 
     return (
       
@@ -29,9 +34,9 @@ const OrdersTable = () => {
          <div className=' d-flex align-items-center justify-content-between'>
             <div className='show-number p-2 m-2 d-flex align-items-center'>
                 <p style={{marginRight:"10px"}}>Show</p>
-                <select name='number' id='numb'>
+                <select name='number' id='numb' value={showNumberOrders} onChange={OnChangeShowNumber}>
+                    <option>5</option>
                     <option>10</option>
-                    <option>25</option>
                     <option>50</option>
                     <option>100</option>
                 </select>
@@ -39,7 +44,10 @@ const OrdersTable = () => {
             </div>
             <div className='search-table d-flex align-items-center'>
                 <p style={{marginRight:"5px"}}>Search :</p>
-                <input type='search' className='search-dark' style={{
+                <input type='search' className='search-dark'
+                                  value={showWord}
+                                  onChange={OnChangeSearch}
+                                   style={{
                     outline:"none",
                     border:"1px solid #ddd",
                     padding:"0 5px"
@@ -65,20 +73,23 @@ const OrdersTable = () => {
             </TableRow>
           </TableHead>
           <TableBody>
-            {rows.map((row) => (
+            {
+              loadingSearch === false ?
+              loading === false ?
+              allOrders.length > 0 ?
+            allOrders.map((row) => (
               <TableRow
-                key={row.id}
+                key={row.ID}
                 sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
               >
-                <TableCell ><p>{row.id}</p> </TableCell>
-                <TableCell ><p>{row.name} </p></TableCell>
-                <TableCell ><p>{row.address}</p> </TableCell>
-                <TableCell ><p>{row.cost} </p></TableCell>
-                <TableCell ><p>{row.mark}</p> </TableCell>
-                <TableCell ><p>{row.status}</p> </TableCell>
-                <TableCell ><p>{row.boys}</p> </TableCell>
-                <TableCell ><p>{row.date} </p></TableCell>
-                <TableCell ><p>{row.note}</p> </TableCell>
+                <TableCell ><p>{row.ID}</p> </TableCell>
+                <TableCell ><p>{row["Client Name"]} </p></TableCell>
+                <TableCell ><p>{row.Location}</p> </TableCell>
+                <TableCell ><p>{row["Transportation Cost"]} </p></TableCell>
+                <TableCell ><p>{row.Landmark}</p> </TableCell>
+                <TableCell ><p>{row["Order Status"]}</p> </TableCell>
+                <TableCell ><p>{row["Delivery Boy"]}</p> </TableCell>
+                <TableCell ><p>{row.Date} </p></TableCell> 
                 <TableCell >
                 <Modal show={show} onHide={handleClose}>
         <Modal.Header closeButton>
@@ -104,11 +115,11 @@ const OrdersTable = () => {
         <Modal.Body>
               <div className='show-status d-flex align-items-center'>
               <p style={{marginRight:"10px"}}>Order Status</p>
-                <select name='status' id='status'>
-                    <option>Open</option>
-                    <option>In Progress</option>
-                    <option>Completed</option>
-                    <option>Delivery</option>
+                <select name='status' id='status' value={status} onChange={OnChangeStatus}>
+                    <option id='1'>Open</option>
+                    <option id='2'>In Progress</option>
+                    <option id='3'>Completed</option>
+                    <option id='4'>Delivery</option>
                 </select> 
             </div>
         </Modal.Body>
@@ -122,26 +133,32 @@ const OrdersTable = () => {
         </Modal.Footer>
       </Modal>
                 <div style={{position:"relative"}}>
-              <i class='fa-solid fa-ellipsis icon-box' onClick={()=>handleOpen(row.id)}></i>
-              <div className='box-edit' id={row.id} style={{zIndex:"100"}}>
+              <i class='fa-solid fa-ellipsis icon-box' onClick={()=>handleOpen(row.ID)}></i>
+              <div className='box-edit' id={row.ID} style={{zIndex:"100"}}>
+                <Link to={`/orders/orderdetails/${row.ID}`}>
                   <p><i class=" fa-solid fa-plus" style={{ marginRight:"8px"}}></i> Order Details</p> 
-                  <p onClick={handleShowEdit}><img src={edit} style={{width:"18px",height:"18px", marginRight:"8px"}} alt='edit'/> Edit</p>
-                  <p onClick={handleShow}><img src={dlete} style={{width:"18px",height:"18px", marginRight:"8px"}} alt='delete'/>Delete</p>
+                </Link>
+                  <p onClick={()=>handleShowEdit(row.ID)}><img src={edit} style={{width:"18px",height:"18px", marginRight:"8px"}} alt='edit'/> Edit</p>
+                  <p onClick={()=>handleShow(row.ID)}><img src={dlete} style={{width:"18px",height:"18px", marginRight:"8px"}} alt='delete'/>Delete</p>
                 </div>
                 </div>
                  </TableCell>
               </TableRow>
-            ))}
+            )) :<div>There is no data found</div>
+            : <Spinner animation="border" variant="primary" className='m-3'/> :
+            <Spinner animation="border" variant="primary" className='m-3'/>
+            }
           </TableBody>
         </Table>
         <div className='px-3 d-flex align-items-center justify-content-between'>
             <div>
-                <p>Showing 1 to 10 of 137 entries</p>
+                <p>Showing 1 to {allOrders.length} of {totalnumberOrders} entries</p>
             </div>
             <div>
-        <Pagenation pageCount={rows.length}/>
+        <Pagenation pageCount={pageCount} onPress={getPage}/>
             </div>
         </div>
+        <ToastContainer/>
       </TableContainer>
     );
 }

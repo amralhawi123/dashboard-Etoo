@@ -1,12 +1,14 @@
 import { useEffect, useState } from 'react' 
-import { geLimitDeliveryInPage, getAllDelivery, getAllDeliveryPage } from '../../redux/actions/DeliveryAction'
+import { geLimitDeliveryInPage, getAllDelivery, getAllDeliveryPage, getAllDeliverySearch } from '../../redux/actions/DeliveryAction'
 import { useDispatch, useSelector } from 'react-redux'
 
 const AllDeliveryHook = () => { 
     const token = localStorage.getItem("token")
     const dispatch = useDispatch()
-    const [loading,setLoading] = useState(true)
-    const [showNumber,setShowNumber] = useState(localStorage.getItem("showNumb"))
+    const [loading,setLoading] = useState(true) 
+    const [page,setPage] = useState(1)  
+    const showNumber = localStorage.getItem("showNumb") 
+
 
     useEffect( () => {
         const getData = async ()=>{
@@ -17,7 +19,7 @@ const AllDeliveryHook = () => {
             setLoading(false)
         }
         getData()
-        getLimit(showNumber)
+            getLimit(showNumber)
     }, [])
     
     const OnChangeShowNumber= (e) => { 
@@ -26,12 +28,37 @@ const AllDeliveryHook = () => {
             window.location.reload(false)
         }, 1000);
     }
-    
+    const [searchWord, setsearchWord] = useState('')
+         
+    const OnChangeSearch =(e) => {
+       localStorage.setItem("wordDelivery", e.target.value)
+       setsearchWord(e.target.value)
+    }
+    let word = ""
+    const getStorag =() => {
+       if(localStorage.getItem("wordDelivery") != null && localStorage.getItem("wordDelivery") !== ''){
+        if(showNumber){
+            word = `/search/${localStorage.getItem("wordDelivery")}?perpage=${showNumber}&page=${page}`
+        }else{
+            word = `/search/${localStorage.getItem("wordDelivery")}?perpage=5&page=1`
+        }
+       } else {
+        if(showNumber){
+            word =`?perpage=${showNumber}&page=${page}`
+            localStorage.removeItem("wordDelivery")
+        } else {
+            word =`?perpage=5&page=${page}`
+            localStorage.removeItem("wordDelivery")
+        }
+       }
+    }
+
       // at click pagination
       const getPage = (page) => {
+        setPage( page)
         const formData= new FormData()
         formData.append("token", token)
-          dispatch(getAllDeliveryPage(page,formData))  
+          dispatch(getAllDeliveryPage(page,showNumber,formData))  
      }
 
       // limit delvery
@@ -41,7 +68,24 @@ const AllDeliveryHook = () => {
          await dispatch(geLimitDeliveryInPage(limit,formData))
         
         }
-        
+        const getOrders = async() => {
+            getStorag()
+             const formData= new FormData()
+             formData.append("token", token)
+             await dispatch(getAllDeliverySearch(word,formData))
+          }
+      
+          useEffect(() => {
+            setTimeout(() => { 
+                getOrders() 
+            }, 1000);
+          }, [searchWord,page])
+      
+          let showWord = ""
+          if(localStorage.getItem("wordDelivery") != null){
+            showWord = localStorage.getItem("wordDelivery")
+          }
+
         const delivery = useSelector(state => state.allDeliver.delivery) 
 
 let allDelivery = []
@@ -64,12 +108,12 @@ try{
 }
 }catch(e){} 
 
-let numberEnteris = []
+let totalnumberDelivery = []
 try{
     if(delivery.pagination){
-        numberEnteris = delivery.pagination.total
+        totalnumberDelivery = delivery.pagination.total
 }else{
-    numberEnteris=[]
+    totalnumberDelivery=[]
 }
 }catch(e){} 
 
@@ -113,7 +157,9 @@ try{
   });
 
 
-  return [head,handleOpen,pageCount,allDelivery,getPage,showNumber,OnChangeShowNumber,numberEnteris,loading,delivery ]
+  return [head,handleOpen,pageCount,allDelivery,
+    getPage,showNumber,OnChangeShowNumber,totalnumberDelivery,
+    loading,OnChangeSearch ,showWord]
 }
 
 export default AllDeliveryHook

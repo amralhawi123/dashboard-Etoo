@@ -965,16 +965,20 @@ color: var(--line);
     border: 1px solid #ddd;
     border-radius: 5px;
     padding: 2px 5px;
-    width: 70%;
+    width: 75%;
 }
 .edit-message input,
 .edit-message textarea{
     border: 1px solid #ddd;
     border-radius: 5px;
     padding: 2px 5px;
-    width: 80%;
+    width: 75%;
     outline: none;
     background-color: #f3f2f2d6;
+}
+.edit-message p{
+    width: 20%;
+    margin-right: 5px;
 }
 .btn-add,
 .btn-add:hover{
@@ -988,3 +992,18 @@ color: var(--line);
 }
  
 /* end dashboard */
+.no-data-container {
+    text-align: center;
+    padding: 20px;
+    margin: 20px;
+    border: 2px dashed #ccc;
+    border-radius: 10px;
+    background-color: #fff;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.no-data-message {
+    font-size: 18px;
+    color: #333;
+    margin: 0;
+}

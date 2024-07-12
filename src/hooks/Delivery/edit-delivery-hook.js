@@ -15,6 +15,7 @@ const EditDeliveryHook = () => {
   const [image,setImagee] = useState('')
   const [selectedFile, setselectedFile] = useState(null)
   const [LoadingData, setLoadingData] = useState(true)
+  const [id, setId] = useState()
 
   const onChangNameEdit= (e) => {
     e.persist()
@@ -50,6 +51,7 @@ const EditDeliveryHook = () => {
         setLoadingData(true)
         await dispatch(getOnDeliveryAction(id,formData))
         setLoadingData(false)
+        setId(id)
     }
 
     const oneDelivery = useSelector(state => state.allDeliver.getOneDelivery)
@@ -63,10 +65,15 @@ const EditDeliveryHook = () => {
         setTransType(oneDelivery["Delivery Boy"]["transportation_type"]) 
       }
     }
-    }, [LoadingData])
+    }, [LoadingData, oneDelivery])
 
-    const handleEdit= async(e) => {
+    const handleEdit= async() => {
         setShowEdit(false)  
+        if(nameEdit==="" || selectedFile===null || transTypeEdit==='' || noteEdit === ''){
+           notify("من فضلك اكمل البيانات","warn")
+           return ;
+        }
+
                 const formData= new FormData()
                 formData.append("token", token)
                 formData.append("name", nameEdit)
@@ -76,7 +83,7 @@ const EditDeliveryHook = () => {
                 formData.append("image",selectedFile)
       
                 setLoading(true)
-                await dispatch(editDeliveryAction(e,formData)) 
+                await dispatch(editDeliveryAction(id,formData)) 
                 setLoading(false)
     }
 
@@ -86,7 +93,7 @@ const EditDeliveryHook = () => {
       if(loading === false){
         if(res.status){
           if(res.status === true){
-             notify("Updated successfully", "success")
+             notify(res.msg, "success")
              setTimeout(() => {
                window.location.reload(false)
            }, 2000);

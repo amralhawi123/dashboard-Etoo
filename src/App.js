@@ -6,8 +6,7 @@ import { Route, Routes } from "react-router-dom";
 import EcommercePage from "./pages/dashboard/EcommercePage";
 import AnalyticsPage from "./pages/dashboard/AnalyticsPage";
 import MarketingPage from "./pages/dashboard/MarketingPage";
-import SideBar from "./Components/uitlity/SideBar";
-import OrdersPage from "./pages/Orders/OrdersPage";
+import SideBar from "./Components/uitlity/SideBar"; 
 import MessagePage from "./pages/message/MessagePage";
 import ProductsPage from "./pages/Products/ProductsPage"; 
 import AddProductImagesPage from "./pages/Products/AddProductImages";
@@ -23,7 +22,9 @@ import AboutPage from "./pages/Setting/AboutPage";
 import TransportionPage from "./pages/Setting/TransportionPage";
 import ProfilePage from "./pages/Profile/ProfilePage"; 
 import LoginPages from "./pages/auth/LoginPages"; 
-import AllDeliveryHook from "./hooks/Delivery/all-delivery-hook";
+import AllDeliveryHook from "./hooks/Delivery/all-delivery-hook"; 
+import OrdersPage from './pages/Orders/OrdersTablePage';
+import OrderDetailsPage from "./pages/Orders/OrdersDetailsPage";
 
 function App() { 
   const [t, i18n] = useTranslation();
@@ -77,6 +78,7 @@ const ClickOnAnyPointInPage=()=>{
             <Route path="/analytics" element={<AnalyticsPage />} />
             <Route path="/marketing" element={<MarketingPage />} />
             <Route path="/orders" element={<OrdersPage />} />
+            <Route path="/orders/orderdetails/:id" element={<OrderDetailsPage   />} />
             <Route path="/message" element={<MessagePage />} />
             <Route path="/products" element={<ProductsPage />} />
             <Route path="/products-images/id" element={<AddProductImagesPage />} />

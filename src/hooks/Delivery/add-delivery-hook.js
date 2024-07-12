@@ -34,7 +34,17 @@ const AddDeliveryHook = () => {
 }
 
  const handleAdd = async(e) => { 
-  setShowAdd(false) 
+    setShowAdd(false) 
+   e.preventDefault();
+
+   if(phone.length !== 10){
+      notify("رقم الهاتف يجب أن يكون 10 أرقام","warn")
+      return ;
+   }
+   if(name==="" || selectedFile===null || transType==='' || note === ''){
+      notify("من فضلك اكمل البيانات","warn")
+      return ;
+   }
           const formData= new FormData()
           formData.append("token", token)
           formData.append("name", name)
@@ -54,7 +64,7 @@ const AddDeliveryHook = () => {
     if(loading === false){
       if(res){
          if(res.status === true){
-            notify("Added Successfully", "success")
+            notify(res.msg, "success")
             setTimeout(() => {
                window.location.reload(false)
             }, 2000);

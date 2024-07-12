@@ -9,6 +9,7 @@ const DeleteDeliveryHook = () => {
   const dispatch = useDispatch()
   const [loading,setLoading] = useState(true)
   const [id, setId] = useState()
+  
     const [show, setShow] = useState(false);
 
     const handleClose = () => setShow(false);
@@ -30,12 +31,12 @@ const DeleteDeliveryHook = () => {
     useEffect(() => {
       if(loading === false){
          if(res.msg === 200){
-            notify("Deleted successfully", "success")
+            notify(res.succNum, "success")
             setTimeout(() => {
               window.location.reload(false)
           }, 2000);
-         }else if(res.msg === "Captain Does Not exist"){
-            notify(res.msg, "error")
+         }else {
+            notify(res.succNum, "error")
          }
       }
    // eslint-disable-next-line react-hooks/exhaustive-deps

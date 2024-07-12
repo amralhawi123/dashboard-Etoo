@@ -24,7 +24,7 @@ const DeliveryTable = () => {
       onChangName,onChangTransType,onChangPhone,onChangNote,onChangImage
      ] = AddDeliveryHook()
     const [head,handleOpen,pageCount,allDelivery,getPage,showNumber,
-      OnChangeShowNumber,numberEnteris,loading,delivery ] = AllDeliveryHook()
+      OnChangeShowNumber,totalnumberDelivery,loading,OnChangeSearch ,showWord ] = AllDeliveryHook()
 
       return (
         
@@ -36,19 +36,19 @@ const DeliveryTable = () => {
           <Modal.Body>
           <div className='edit-message'>
                 <div className='mt-2 d-flex align-items-center gap-2'>
-                <p style={{marginRight:"10px"}}>Name:-</p>
+                <p>Name:-</p>
                 <input type='text' placeholder='Product Name' value={name} onChange={onChangName}/>
                     </div>
                     <div className='mt-2 d-flex align-items-center gap-2'>
-                <p style={{marginRight:"10px"}}>Phone:-</p>
+                <p>Phone:-</p>
                 <input type='text' placeholder='Product Description' value={phone} onChange={onChangPhone}/>
                     </div>
                     <div className='mt-2 d-flex align-items-center gap-2'>
-                <p style={{marginRight:"10px"}}>Note:-</p>
+                <p>Note:-</p>
                 <input type='text' placeholder='Product Description' value={note} onChange={onChangNote}/>
                     </div>
                     <div className='mt-2 d-flex align-items-center gap-2'>
-                <p style={{marginRight:"10px"}}>Transportation Type:-</p>
+                <p>Transportation Type:-</p>
                 <select name='status' id='status' value={transType} onChange={onChangTransType}>
                 <option>Select Transportion type</option>
                     <option>car</option>
@@ -57,7 +57,7 @@ const DeliveryTable = () => {
                 </select> 
                     </div>
                     <div className='mt-2 d-flex align-items-center gap-2'>
-                <p style={{marginRight:"10px"}}>Image:-</p>
+                <p>Image:-</p>
                 <input type='file' onChange={onChangImage} />
                     </div>
               </div>
@@ -90,7 +90,10 @@ const DeliveryTable = () => {
               </div>
               <div className='search-table d-flex align-items-center'>
                   <p style={{marginRight:"5px"}}>Search :</p>
-                  <input type='search' className='search-dark' style={{
+                  <input type='search' className='search-dark'
+                  value={showWord}
+                  onChange={OnChangeSearch}
+                   style={{
                       outline:"none",
                       border:"1px solid #ddd",
                       padding:"0 5px"
@@ -152,19 +155,19 @@ const DeliveryTable = () => {
           <Modal.Body>
           <div className='edit-message'>
                 <div className='mt-2 d-flex align-items-center gap-2'>
-                <p style={{marginRight:"10px"}}>Name:-</p>
+                <p>Name:-</p>
                 <input type='text' placeholder='Product Name' value={nameEdit} onChange={onChangNameEdit}/>
                     </div>
                     <div className='mt-2 d-flex align-items-center gap-2'>
-                <p style={{marginRight:"10px"}}>Phone:-</p>
+                <p>Phone:-</p>
                 <input type='text' placeholder='Product Description' value={phoneEdit} onChange={onChangPhoneEdit}/>
                     </div>
                     <div className='mt-2 d-flex align-items-center gap-2'>
-                <p style={{marginRight:"10px"}}>Note:-</p>
+                <p>Note:-</p>
                 <input type='text' placeholder='Product Description' value={noteEdit} onChange={onChangNoteEdit}/>
                     </div>
                     <div className='mt-2 d-flex align-items-center gap-2'>
-                <p style={{marginRight:"10px"}}>Transportation Type:-</p>
+                <p>Transportation Type:-</p>
                 <select name='status' id='status' value={transTypeEdit} onChange={onChangTransTypeEdit}>
                     <option>Select Transportion type</option>
                     <option>car</option>
@@ -173,7 +176,7 @@ const DeliveryTable = () => {
                 </select> 
                     </div>
                     <div className='mt-2 d-flex align-items-center gap-2'>
-                <p style={{marginRight:"10px"}}>Image:-</p>
+                <p>Image:-</p>
                 <input type='file'  onChange={onImageChangeEdit}/>
                     </div>
               </div>
@@ -182,7 +185,7 @@ const DeliveryTable = () => {
             <Button variant="dark" onClick={handleCloseEdit}>
               Close
             </Button>
-            <Button variant="danger" onClick={()=>handleEdit(row.ID)}>
+            <Button variant="danger" onClick={handleEdit}>
               Update
             </Button>
           </Modal.Footer>
@@ -202,7 +205,7 @@ const DeliveryTable = () => {
           </Table>
           <div className='px-3 d-flex align-items-center justify-content-between'>
               <div>
-                  <p>Showing 1 to {showNumber} of {numberEnteris} entries</p>
+                  <p>Showing 1 to {allDelivery.length} of {totalnumberDelivery} entries</p>
               </div>
               <div>
           <Pagenation pageCount={pageCount} onPress={getPage}/>
