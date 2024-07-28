@@ -22,7 +22,7 @@ const AllAddProductsHook = ({id}) => {
     }, [])
 
     const oneProduct = useSelector(state => state.ProductsReducer.oneProduct)
-    console.log(oneProduct)
+
     let product = []
     try {      
        if(oneProduct.Product){
