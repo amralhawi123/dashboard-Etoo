@@ -18,7 +18,6 @@ const OrderDetails = () => {
         getPage
     ] = AllProductInOrderHook(id)  
     
-
   return (
     <TableContainer component={Paper} style={{marginTop:"10px"}}>
     <div style={{borderBottom:"1px solid #ddd", padding:"15px", marginBottom:"15px"}}>

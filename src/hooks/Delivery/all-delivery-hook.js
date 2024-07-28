@@ -78,7 +78,7 @@ const AllDeliveryHook = () => {
           useEffect(() => {
             setTimeout(() => { 
                 getOrders() 
-            }, 1000);
+            }, 1200);
           }, [searchWord,page])
       
           let showWord = ""

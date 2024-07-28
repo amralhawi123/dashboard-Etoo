@@ -6,17 +6,19 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import edit from '../../imgs/edit.png';
-import dlete from '../../imgs/delete.png'; 
 import Pagenation from '../uitlity/Pagination';
-import { Button, Modal, Spinner } from 'react-bootstrap';     
-import AddProductHook from '../../hooks/Products/add-product-hook'; 
+import { Button, Modal, Spinner } from 'react-bootstrap';      
 import AllAddProductsHook from '../../hooks/Products/all-add-product-hook';
+import { useParams } from 'react-router-dom';
+import AddProductImageHook from '../../hooks/Products/add-image-product-hook';
+import { ToastContainer } from 'react-toastify';
  
 
 const AddProductsTable = () => {  
-    const [ handleAdd, showAdd,handleCloseAdd,handleShowAdd ] = AddProductHook()
-    const [head,handleOpen ] = AllAddProductsHook()
+  const id = useParams()
+
+    const [handleCloseAdd,handleShowAdd,handleAdd,onImageChange,showAdd] = AddProductImageHook(id)
+    const [head ,product,loading] = AllAddProductsHook(id)
  
       return (
         
@@ -29,7 +31,7 @@ const AddProductsTable = () => {
                 <div className='edit-message'>
                     <div className='mt-2 d-flex align-items-center gap-2'>
                 <p style={{marginRight:"10px"}}>Image:-</p>
-                <input type='file'  />
+                <input type='file' onChange={onImageChange} multiple />
                     </div>
               </div>
           </Modal.Body>
@@ -87,7 +89,20 @@ const AddProductsTable = () => {
               </TableRow>
             </TableHead>
             <TableBody>
+              {
+                loading === false ?
+                product ?
+                  <TableRow
+                  key={product.ID}
+                  sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                >
+                  <TableCell ><p>{product.ID}</p> </TableCell>
+                  <TableCell ><img style={{marginRight:"8px", width:"60px"}} src={product.Image} alt="brand1"/></TableCell>
+                  </TableRow>
+                 : <h6>There is no images</h6>
+                  : 
             <Spinner animation="border" variant="primary" />
+              }
             </TableBody>
           </Table>
           <div className='px-3 d-flex align-items-center justify-content-between'>
@@ -98,6 +113,7 @@ const AddProductsTable = () => {
           <Pagenation />
               </div>
           </div>
+          <ToastContainer/>
         </TableContainer>
       );
 }

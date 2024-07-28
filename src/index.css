@@ -130,8 +130,13 @@ h6.dark-mode{
 h5.dark-mode{
     color: var(--line);
     }
+
 tbody tr:hover{
     background-color: var(--scond-color);
+    transition: var(--main-transtion);
+}
+tbody tr.dark-mode:hover{
+    background-color: var(--main-color);
     transition: var(--main-transtion);
 }
 

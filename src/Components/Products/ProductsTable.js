@@ -9,22 +9,34 @@ import Paper from '@mui/material/Paper';
 import edit from '../../imgs/edit.png';
 import dlete from '../../imgs/delete.png'; 
 import Pagenation from '../uitlity/Pagination';
-import { Button, Modal } from 'react-bootstrap';     
+import { Button, Modal, Spinner } from 'react-bootstrap';     
 import AddProductHook from '../../hooks/Products/add-product-hook';
 import AllProductsHook from '../../hooks/Products/all-product-hook';
 import DeleteProductHook from '../../hooks/Products/delete-product-hook';
 import EditProductHook from './../../hooks/Products/edit-product-hook';
 import { useNavigate } from 'react-router-dom';
+import { ToastContainer } from 'react-toastify';
 
 const ProductsTable = () => {
     const [OnhandleClick, show, handleClose,handleShow ] = DeleteProductHook()
-    const [ handleEdit, showEdit,handleCloseEdit,handleShowEdit ] = EditProductHook()
-    const [ handleAdd, showAdd,handleCloseAdd,handleShowAdd ] = AddProductHook()
-    const [rows,head,handleOpen ] = AllProductsHook()
+    const [ handleEdit, showEdit,handleCloseEdit,handleShowEdit,
+      onChangProductNameEdit,onChangProductPriceEdit,prodNameEdit,onChangProductDescriptionEdit,
+      prodPriceEdit,prodDescEdit,onChangProductPriceOldEdit,onImageChangeEdit,categoryNameEdit,
+      prodPriceOldEdit,onChangCatIdEdit
+     ] = EditProductHook()
+    const [ handleAdd, showAdd,handleCloseAdd,handleShowAdd,
+      prodName,prodDesc,prodPrice,prodPriceOld,onChangCatId,onChangProductDescription,
+      onChangProductName,onChangProductPrice,onChangProductPriceOld,onImageChange,categoryName,categories
+     ] = AddProductHook()
+    const [allProducts,head,handleOpen,pageCount,totalnumberProducts,loading,
+      getPage,OnChangeShowNumber,showNumberProducts,showWord,OnChangeSearch
+     ] = AllProductsHook()
+
     const navigate = useNavigate()
-    const clickToAddImage = ()=>{
-      navigate('/products-images/id')
+    const clickToAddImage = (id)=>{
+      navigate(`/products-images/${id}`)
     }
+
       return (
         
         <TableContainer component={Paper} style={{marginTop:"10px"}}>
@@ -35,33 +47,36 @@ const ProductsTable = () => {
           <Modal.Body>
                 <div className='edit-message'>
                     <div className='mt-2 d-flex align-items-center gap-2'>
-                <p style={{marginRight:"10px"}}>Product Name:-</p>
-                <input type='text' placeholder='Product Name'/>
+                <p>Product Name:-</p>
+                <input type='text' placeholder='Product Name' value={prodName} onChange={onChangProductName}/>
                     </div>
                     <div className='mt-2 d-flex align-items-center gap-2'>
-                <p style={{marginRight:"10px"}}>Product Description:-</p>
-                <input type='text' placeholder='Product Description'/>
+                <p>Product Description:-</p>
+                <input type='text' placeholder='Product Description' value={prodDesc} onChange={onChangProductDescription}/>
                     </div>
                     <div className='mt-2 d-flex align-items-center gap-2'>
-                <p style={{marginRight:"10px"}}>Category Name:-</p>
-                <select name='status' id='status'>
-                    <option>Amr</option>
-                    <option>Ali</option>
-                    <option>Ahmed</option>
-                    <option>Omar</option>
+                <p>Category Name:-</p>
+                <select name='status' id='status' value={categoryName} onChange={onChangCatId}>
+                    <option>select Category Name</option>
+                    {
+                    categories.data ? 
+                    categories.data.map((cat)=>(
+                      <option id={cat.ID}>{cat.Category_name}</option> 
+                    )) : <h5>There is no category found</h5>
+                  }
                 </select> 
                     </div>
                     <div className='mt-2 d-flex align-items-center gap-2'>
-                <p style={{marginRight:"10px"}}>Product Price:-</p>
-                <input type='number' value={0} min={0} max={100}/>
+                <p>Product Price:-</p>
+                <input type='number' value={prodPrice} onChange={onChangProductPrice} min={0} max={100} />
                     </div>
                     <div className='mt-2 d-flex align-items-center gap-2'>
-                <p style={{marginRight:"10px"}}>product Price Old:-</p>
-                <input type='number' value={0} min={0} max={100}/>
+                <p>product Price Old:-</p>
+                <input type='number' value={prodPriceOld} onChange={onChangProductPriceOld} min={0} max={100}/>
                     </div>
                     <div className='mt-2 d-flex align-items-center gap-2'>
-                <p style={{marginRight:"10px"}}>Image:-</p>
-                <input type='file'  />
+                <p>Image:-</p>
+                <input type='file' onChange={onImageChange} />
                     </div>
               </div>
           </Modal.Body>
@@ -83,9 +98,10 @@ const ProductsTable = () => {
            <div className=' d-flex align-items-center justify-content-between'>
               <div className='show-number p-2 m-2 d-flex align-items-center'>
                   <p style={{marginRight:"10px"}}>Show</p>
-                  <select name='number' id='numb'>
+                  <select name='number' id='numb' value={showNumberProducts}
+                  onChange={OnChangeShowNumber}>
+                      <option>5</option>
                       <option>10</option>
-                      <option>25</option>
                       <option>50</option>
                       <option>100</option>
                   </select>
@@ -93,7 +109,9 @@ const ProductsTable = () => {
               </div>
               <div className='search-table d-flex align-items-center'>
                   <p style={{marginRight:"5px"}}>Search :</p>
-                  <input type='search' className='search-dark' style={{
+                  <input type='search' className='search-dark'
+                  value={showWord}
+                  onChange={OnChangeSearch} style={{
                       outline:"none",
                       border:"1px solid #ddd",
                       padding:"0 5px"
@@ -119,18 +137,21 @@ const ProductsTable = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map((row) => (
+              {
+              loading === false ?
+              allProducts.length > 0 ?
+              allProducts.map((row) => (
                 <TableRow
-                  key={row.id}
+                  key={row.ID}
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
-                  <TableCell ><p>{row.id}</p> </TableCell>
-                  <TableCell >{row.image}</TableCell>
-                  <TableCell  ><p>{row.prodName}</p> </TableCell>
-                  <TableCell width={500} ><p>{row.prodDes}</p> </TableCell>
-                  <TableCell  ><p>{row.catName}</p> </TableCell>
-                  <TableCell  ><p>{row.prodPrice}</p> </TableCell>
-                  <TableCell  ><p>{row.prodOldPrice}</p> </TableCell>
+                  <TableCell ><p>{row.ID}</p> </TableCell>
+                  <TableCell ><img style={{marginRight:"8px", width:"60px"}} src={row.Image} alt="brand1"/></TableCell>
+                  <TableCell  ><p>{row.Name}</p> </TableCell>
+                  <TableCell width={500} ><p>{row.Product_Description}</p> </TableCell>
+                  <TableCell  ><p>{row.Category_Name}</p> </TableCell>
+                  <TableCell  ><p>{row.Product_Price}</p> </TableCell>
+                  <TableCell  ><p>{row.Product_Price_Old}</p> </TableCell>
                   <TableCell  >
                   <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
@@ -153,33 +174,39 @@ const ProductsTable = () => {
           <Modal.Body>
                 <div className='edit-message'>
                 <div className='mt-2 d-flex align-items-center gap-2'>
-                <p style={{marginRight:"10px"}}>Product Name:-</p>
-                <input type='text' placeholder='Product Name'/>
+                <p>Product Name:-</p>
+                <input type='text' placeholder='Product Name' value={prodNameEdit} onChange={onChangProductNameEdit}/>
                     </div>
                     <div className='mt-2 d-flex align-items-center gap-2'>
-                <p style={{marginRight:"10px"}}>Product Description:-</p>
-                <input type='text' placeholder='Product Description'/>
+                <p>Product Description:-</p>
+                <input type='text' placeholder='Product Description' value={prodDescEdit}
+                onChange={onChangProductDescriptionEdit}/>
                     </div>
                     <div className='mt-2 d-flex align-items-center gap-2'>
-                <p style={{marginRight:"10px"}}>Category Name:-</p>
-                <select name='status' id='status'>
-                    <option>Amr</option>
-                    <option>Ali</option>
-                    <option>Ahmed</option>
-                    <option>Omar</option>
+                    <p>Category Name:-</p>
+                <select name='status' id='status' value={categoryNameEdit} onChange={onChangCatIdEdit}>
+                    <option>select Category Name</option>
+                    {
+                    categories.data ? 
+                    categories.data.map((cat)=>(
+                      <option id={cat.ID}>{cat.Category_name}</option> 
+                    )) : <h5>There is no category found</h5>
+                  }
                 </select> 
                     </div>
                     <div className='mt-2 d-flex align-items-center gap-2'>
-                <p style={{marginRight:"10px"}}>Product Price:-</p>
-                <input type='number' value={0} min={0} max={100}/>
+                <p>Product Price:-</p>
+                <input type='number' value={prodPriceEdit}
+                onChange={onChangProductPriceEdit} min={0} max={100}/>
                     </div>
                     <div className='mt-2 d-flex align-items-center gap-2'>
-                <p style={{marginRight:"10px"}}>product Price Old:-</p>
-                <input type='number' value={0} min={0} max={100}/>
+                <p>product Price Old:-</p>
+                <input type='number' value={prodPriceOldEdit}
+                onChange={onChangProductPriceOldEdit} min={0} max={100}/>
                     </div>
                     <div className='mt-2 d-flex align-items-center gap-2'>
-                <p style={{marginRight:"10px"}}>Image:-</p>
-                <input type='file'  />
+                <p>Image:-</p>
+                <input type='file'  onChange={onImageChangeEdit}/>
                     </div>
               </div>
           </Modal.Body>
@@ -193,27 +220,31 @@ const ProductsTable = () => {
           </Modal.Footer>
         </Modal>
                   <div style={{position:"relative"}}>
-                <i class='fa-solid fa-ellipsis icon-box' onClick={()=>handleOpen(row.id)}></i>
-                <div className='box-edit' id={row.id} style={{zIndex:"100"}}>
+                <i class='fa-solid fa-ellipsis icon-box' onClick={()=>handleOpen(row.ID)}></i>
+                <div className='box-edit' id={row.ID} style={{zIndex:"100"}}>
                     <p ><i class=" fa-solid fa-plus" style={{ marginRight:"8px"}}></i> Add Attribute</p> 
-                    <p onClick={clickToAddImage}><i class=" fa-solid fa-plus" style={{ marginRight:"8px"}}></i> Add Images</p> 
-                    <p onClick={handleShowEdit}><img src={edit} style={{width:"18px",height:"18px", marginRight:"8px"}} alt='edit'/> Edit</p>
-                    <p onClick={()=>handleShow(row.id)}><img src={dlete} style={{width:"18px",height:"18px", marginRight:"8px"}} alt='delete'/>Delete</p>
+                    <p onClick={()=>clickToAddImage(row.ID)}><i class=" fa-solid fa-plus" style={{ marginRight:"8px"}}></i> Add Images</p> 
+                    <p onClick={()=>handleShowEdit(row.ID)}><img src={edit} style={{width:"18px",height:"18px", marginRight:"8px"}} alt='edit'/> Edit</p>
+                    <p onClick={()=>handleShow(row.ID)}><img src={dlete} style={{width:"18px",height:"18px", marginRight:"8px"}} alt='delete'/>Delete</p>
                   </div>
                   </div>
                    </TableCell>
                 </TableRow>
-              ))}
+              )):<div class="no-data-container">
+              <p class="no-data-message">There is No Data Found</p>
+          </div>
+              :<Spinner animation="border" variant="primary" className='m-3'/>}
             </TableBody>
           </Table>
           <div className='px-3 d-flex align-items-center justify-content-between'>
               <div>
-                  <p>Showing 1 to 10 of 137 entries</p>
+                  <p>Showing 1 to {showNumberProducts} of {totalnumberProducts} entries</p>
               </div>
               <div>
-          <Pagenation pageCount={rows.length}/>
+          <Pagenation pageCount={pageCount} onPress={getPage}/>
               </div>
           </div>
+          <ToastContainer/>
         </TableContainer>
       );
 }

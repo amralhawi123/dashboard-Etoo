@@ -5,11 +5,9 @@ import { LOGIN_USER } from "../type";
 export const loginUser = (data) => async (dispatch) => {
   try {
     const response = await usePostData(`/v3/public/cpanel/login`, data);
-    console.log(response)
     dispatch({
       type: LOGIN_USER,
-      payload: response,
-      loading: true,
+      payload: response, 
     });
   } catch (e) {
     dispatch({

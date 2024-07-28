@@ -9,17 +9,27 @@ import Paper from '@mui/material/Paper';
 import edit from '../../imgs/edit.png';
 import dlete from '../../imgs/delete.png'; 
 import Pagenation from '../uitlity/Pagination';
-import { Button, Modal } from 'react-bootstrap';  
+import { Button, Modal, Spinner } from 'react-bootstrap';  
 import DeleteMessageHook from '../../hooks/Messages/delete-message-hook';
 import EditMessageHook from '../../hooks/Messages/edit-message-hook'; 
 import AllMessageHook from '../../hooks/Messages/all-massage-hook'; 
 import AddMessageHook from '../../hooks/Messages/add-message-hook';
+import { ToastContainer } from "react-toastify";
+import AllClientsHook from '../../hooks/User Mangement/all-clients-hook';
 
 const MessageDetails = () => {
     const [OnhandleClick, show, handleClose,handleShow ] = DeleteMessageHook()
-    const [ handleEdit, showEdit,handleCloseEdit,handleShowEdit ] = EditMessageHook()
-    const [ handleAdd, showAdd,handleCloseAdd,handleShowAdd ] = AddMessageHook()
-    const [rows,head,handleOpen ] = AllMessageHook()
+    const [ handleEdit, showEdit,handleCloseEdit,handleShowEdit ,
+      onChangTitleEdit,titleEdit,onChangNotificationEdit,notificationsEdit,
+      onChangClientSelectEdit,clientSelectEdit
+    ] = EditMessageHook()
+    const [ handleAdd, showAdd,handleCloseAdd,handleShowAdd,notifications,clientSelect,title,
+      onChangTitle,onChangClientSelect,onChangNotification
+     ] = AddMessageHook()
+    const [head,handleOpen,allMessages ,totalnumberMessages,pageCount,getPage,loading,
+      showNumberMessages,OnChangeShowNumber,OnChangeSearch,showWord,loadingSearch
+    ] = AllMessageHook()
+    const [allClients] = AllClientsHook()
 
       return (
         
@@ -31,21 +41,24 @@ const MessageDetails = () => {
           <Modal.Body>
                 <div className='edit-message'>
                     <div className='mt-2 d-flex align-items-center gap-2'>
-                <p style={{marginRight:"10px"}}>Title:-</p>
-                <input type='text' placeholder='title'/>
+                <p>Title:-</p>
+                <input type='text' placeholder='title' value={title} onChange={onChangTitle}/>
                     </div>
                     <div className='mt-2 d-flex align-items-center gap-2'>
-                <p style={{marginRight:"10px"}}>Users:-</p>
-                <select name='status' id='status'>
-                    <option>Amr</option>
-                    <option>Ali</option>
-                    <option>Ahmed</option>
-                    <option>Omar</option>
+                <p>Users:-</p>
+                <select name='status' id='status' value={clientSelect} onChange={onChangClientSelect}>
+                <option>Select User</option>
+                  {
+                    allClients ? 
+                    allClients.map((clinet)=>(
+                      <option id={clinet.ID}>{clinet.Name}</option> 
+                    )) : <h5>There is no clients found</h5>
+                  }
                 </select> 
                     </div>
                     <div className='mt-2 d-flex align-items-center gap-2'>
-                <p style={{marginRight:"10px"}}>Notifications:-</p>
-                <textarea/>
+                <p>Notifications:-</p>
+                <textarea value={notifications} onChange={onChangNotification} placeholder='Enter your notification'/>
                     </div>
               </div>
           </Modal.Body>
@@ -67,9 +80,9 @@ const MessageDetails = () => {
            <div className=' d-flex align-items-center justify-content-between'>
               <div className='show-number p-2 m-2 d-flex align-items-center'>
                   <p style={{marginRight:"10px"}}>Show</p>
-                  <select name='number' id='numb'>
+                  <select name='number' id='numb'value={showNumberMessages} onChange={OnChangeShowNumber} >
+                      <option>5</option>
                       <option>10</option>
-                      <option>25</option>
                       <option>50</option>
                       <option>100</option>
                   </select>
@@ -77,7 +90,10 @@ const MessageDetails = () => {
               </div>
               <div className='search-table d-flex align-items-center'>
                   <p style={{marginRight:"5px"}}>Search :</p>
-                  <input type='search' className='search-dark' style={{
+                  <input type='search' className='search-dark'
+                  value={showWord}
+                  onChange={OnChangeSearch}
+                   style={{
                       outline:"none",
                       border:"1px solid #ddd",
                       padding:"0 5px"
@@ -103,14 +119,18 @@ const MessageDetails = () => {
               </TableRow>
             </TableHead>
             <TableBody>
-              {rows.map((row) => (
+              {
+                loadingSearch === false ?
+              loading === false ?
+              allMessages.length > 0 ?
+              allMessages.map((row) => (
                 <TableRow
-                  key={row.id}
+                  key={row.ID}
                   sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                 >
-                  <TableCell ><p>{row.id}</p> </TableCell>
-                  <TableCell width={500} ><p>{row.notification} </p></TableCell>
-                  <TableCell  ><p>{row.title}</p> </TableCell>
+                  <TableCell ><p>{row.ID}</p> </TableCell>
+                  <TableCell ><p>{row.Notification} </p></TableCell>
+                  <TableCell width={300}><p>{row.Title}</p> </TableCell>
                   <TableCell  >
                   <Modal show={show} onHide={handleClose}>
           <Modal.Header closeButton>
@@ -133,12 +153,24 @@ const MessageDetails = () => {
           <Modal.Body>
                 <div className='edit-message'>
                     <div className='mt-2 d-flex align-items-center gap-2'>
-                <p style={{marginRight:"10px"}}>Title:-</p>
-                <input type='text' placeholder='title'/>
+                <p>Title:-</p>
+                <input type='text' placeholder='title' value={titleEdit} onChange={onChangTitleEdit}/>
                     </div>
                     <div className='mt-2 d-flex align-items-center gap-2'>
-                <p style={{marginRight:"10px"}}>Notifications:-</p>
-                <textarea/>
+                <p>Users:-</p>
+                <select name='status' id='status' value={clientSelectEdit} onChange={onChangClientSelectEdit}>
+                <option>Select User</option>
+                  {
+                    allClients ? 
+                    allClients.map((clinet)=>(
+                      <option id={clinet.ID}>{clinet.Name}</option> 
+                    )) : <h5>There is no clients found</h5>
+                  }
+                </select> 
+                    </div>
+                    <div className='mt-2 d-flex align-items-center gap-2'>
+                <p>Notifications:-</p>
+                <textarea value={notificationsEdit} onChange={onChangNotificationEdit}/>
                     </div>
               </div>
           </Modal.Body>
@@ -152,26 +184,31 @@ const MessageDetails = () => {
           </Modal.Footer>
         </Modal>
                   <div style={{position:"relative"}}>
-                <i class='fa-solid fa-ellipsis icon-box' onClick={()=>handleOpen(row.id)}></i>
-                <div className='box-edit' id={row.id} style={{zIndex:"100"}}>
-                    <p><i class=" fa-solid fa-plus" style={{ marginRight:"8px"}}></i> Order Details</p> 
-                    <p onClick={handleShowEdit}><img src={edit} style={{width:"18px",height:"18px", marginRight:"8px"}} alt='edit'/> Edit</p>
-                    <p onClick={handleShow}><img src={dlete} style={{width:"18px",height:"18px", marginRight:"8px"}} alt='delete'/>Delete</p>
+                <i class='fa-solid fa-ellipsis icon-box' onClick={()=>handleOpen(row.ID)}></i>
+                <div className='box-edit' id={row.ID} style={{zIndex:"100"}}>  
+                    <p onClick={()=>handleShowEdit(row.ID)}><img src={edit} style={{width:"18px",height:"18px", marginRight:"8px"}} alt='edit'/> Edit</p>
+                    <p onClick={()=>handleShow(row.ID)}><img src={dlete} style={{width:"18px",height:"18px", marginRight:"8px"}} alt='delete'/>Delete</p>
                   </div>
                   </div>
                    </TableCell>
                 </TableRow>
-              ))}
+              )) :     <div class="no-data-container">
+              <p class="no-data-message">There is No Data Found</p>
+          </div>
+              :<Spinner animation="border" variant="primary" className='m-3'/>
+              :<Spinner animation="border" variant="primary" className='m-3'/>
+            }
             </TableBody>
           </Table>
           <div className='px-3 d-flex align-items-center justify-content-between'>
               <div>
-                  <p>Showing 1 to 10 of 137 entries</p>
+                  <p>Showing 1 to {allMessages.length} of {totalnumberMessages} entries</p>
               </div>
               <div>
-          <Pagenation pageCount={rows.length}/>
+          <Pagenation pageCount={pageCount} onPress={getPage}/>
               </div>
           </div>
+          <ToastContainer/>
         </TableContainer>
       );
 }

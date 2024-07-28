@@ -38,59 +38,59 @@ const AllOrderHook = () => {
        setsearchWord(e.target.value)
     }
 
-          // limit delvery
-          const getLimit = async(limit) => {
-            const formData= new FormData()
-            formData.append("token", token)
-             await dispatch(getLimitOrdersInPage(limit,formData)) 
-            }
+    // limit delvery
+    const getLimit = async(limit) => {
+    const formData= new FormData()
+    formData.append("token", token)
+        await dispatch(getLimitOrdersInPage(limit,formData)) 
+    }
 
-            let word = ""
-            const getStorag =() => {
-               if(localStorage.getItem("searchWord") != null && localStorage.getItem("searchWord") !== ''){
-                if(showNumberOrders){
-                    word = `/search/${localStorage.getItem("searchWord")}?perpage=${showNumberOrders}&page=${page}`
-                }else{
-                    word = `/search/${localStorage.getItem("searchWord")}?perpage=5&page=1`
-                }
-               } else {
-                if(showNumberOrders){
-                    word =`?perpage=${showNumberOrders}&page=${page}`
-                    localStorage.removeItem("searchWord")
-                } else {
-                    word =`?perpage=5&page=${page}`
-                    localStorage.removeItem("searchWord")
-                }
-               }
-            }
+    let word = ""
+    const getStorag =() => {
+        if(localStorage.getItem("searchWord") != null && localStorage.getItem("searchWord") !== ''){
+        if(showNumberOrders){
+            word = `/search/${localStorage.getItem("searchWord")}?perpage=${showNumberOrders}&page=${page}`
+        }else{
+            word = `/search/${localStorage.getItem("searchWord")}?perpage=5&page=1`
+        }
+        } else {
+        if(showNumberOrders){
+            word =`?perpage=${showNumberOrders}&page=${page}`
+            localStorage.removeItem("searchWord")
+        } else {
+            word =`?perpage=5&page=${page}`
+            localStorage.removeItem("searchWord")
+        }
+        }
+    }
 
-          // at click pagination
-          const getPage = async(page) => {
-            setPage( page)
-            const formData= new FormData()
-            formData.append("token", token)
-                await dispatch(getAllOrdersPage(page,showNumberOrders,formData))  
-         }
+    // at click pagination
+    const getPage = async(page) => {
+    setPage( page)
+    const formData= new FormData()
+    formData.append("token", token)
+        await dispatch(getAllOrdersPage(page,showNumberOrders,formData))  
+    }
 
-          const getOrders = async() => {
-            getStorag()
-             const formData= new FormData()
-             formData.append("token", token)
-             setLoadingSearch(true)
-             await dispatch(getAllOrderSearch(word,formData))
-             setLoadingSearch(false)
-          }
-      
-          useEffect(() => {
-            setTimeout(() => { 
-                getOrders() 
-            }, 1000);
-          }, [searchWord,page])
-      
-          let showWord = ""
-          if(localStorage.getItem("searchWord") != null){
-            showWord = localStorage.getItem("searchWord")
-          }
+    const getOrders = async() => {
+    getStorag()
+        const formData= new FormData()
+        formData.append("token", token)
+        setLoadingSearch(true)
+        await dispatch(getAllOrderSearch(word,formData))
+        setLoadingSearch(false)
+    }
+
+    useEffect(() => {
+    setTimeout(() => { 
+        getOrders() 
+    }, 1200);
+    }, [searchWord,page])
+
+    let showWord = ""
+    if(localStorage.getItem("searchWord") != null){
+    showWord = localStorage.getItem("searchWord")
+    }
 
     const orders = useSelector(state => state.OrdersReducer.orders) 
 

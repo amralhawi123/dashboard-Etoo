@@ -51,7 +51,7 @@ const SideBar = ({showside} ) => {
             </MenuItem>
             </Link>
         </SubMenu>
-            <Link to='/orders'>
+            <Link to='/orders' >
             <li className='side-link'>
             <i class="fa-solid fa-clipboard" style={{fontSize:"20px"}}></i> 
             <h5 style={{color:"white"}}>Orders</h5>

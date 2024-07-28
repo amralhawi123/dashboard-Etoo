@@ -6,8 +6,7 @@ export const getAllDelivery = (formData) => async (dispatch) => {
     const respons = await usePostData(`/v3/public/cpanel/delivery`, formData);
     dispatch({
       type: GET_ALL_DELIVERY,
-      payload: respons,
-      loading: true,
+      payload: respons, 
     });
   } catch (e) {
     dispatch({

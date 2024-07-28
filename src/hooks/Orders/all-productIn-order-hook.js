@@ -51,7 +51,7 @@ const AllProductInOrderHook = ({id}) => {
             }
 
     const oneOrderdetails = useSelector(state => state.OrdersReducer.orderProductsDetails)
-    console.log(showNumberProducts)
+    
     let allOrderProducts = []
     try {      
        if(oneOrderdetails.data){

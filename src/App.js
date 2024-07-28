@@ -73,7 +73,7 @@ const ClickOnAnyPointInPage=()=>{
            showMessage={showMessage} showNoti={showNoti} handleOpenMessage={handleOpenMessage}/>
           <div onClick={ClickOnAnyPointInPage} className="content-pages">
           <Routes>  
-            {/* <Route path="/login" element={<LoginPages/>} /> */}
+            <Route path="/login" element={<LoginPages/>} />
             <Route path="/" element={<EcommercePage/>} />
             <Route path="/analytics" element={<AnalyticsPage />} />
             <Route path="/marketing" element={<MarketingPage />} />
@@ -81,7 +81,7 @@ const ClickOnAnyPointInPage=()=>{
             <Route path="/orders/orderdetails/:id" element={<OrderDetailsPage   />} />
             <Route path="/message" element={<MessagePage />} />
             <Route path="/products" element={<ProductsPage />} />
-            <Route path="/products-images/id" element={<AddProductImagesPage />} />
+            <Route path="/products-images/:id" element={<AddProductImagesPage />} />
             <Route path="/offer" element={<OfferPage />} />
             <Route path="/offer-product/id" element={<ShowOfferProductPage />} />
             <Route path="/delivery" element={<DeliveryBoysPage />} />

@@ -11,7 +11,6 @@ const AddDeliveryHook = () => {
   const [transType,setTransType] = useState('')
   const [phone,setPhone] = useState('')
   const [note,setNote] = useState('')
-  const [image,setImagee] = useState('')
   const [selectedFile, setselectedFile] = useState(null)
 
   const onChangName= (e) => {
@@ -28,7 +27,6 @@ const AddDeliveryHook = () => {
  }
  const onImageChange =(e) => {
   if(e.target.files && e.target.files[0]){
-    setImagee(URL.createObjectURL(e.target.files[0]))
      setselectedFile(e.target.files[0])
   }
 }
@@ -37,8 +35,8 @@ const AddDeliveryHook = () => {
     setShowAdd(false) 
    e.preventDefault();
 
-   if(phone.length !== 10){
-      notify("رقم الهاتف يجب أن يكون 10 أرقام","warn")
+   if(phone.length !== 11){
+      notify("رقم الهاتف يجب أن يكون 11 أرقام","warn")
       return ;
    }
    if(name==="" || selectedFile===null || transType==='' || note === ''){
@@ -52,11 +50,11 @@ const AddDeliveryHook = () => {
           formData.append("phone", phone)
           formData.append("note", note)
           formData.append("image",selectedFile)
-
           setLoading(true)
-          await dispatch(addDeliveryAction(formData)) 
+           await dispatch(addDeliveryAction(formData)) 
           setLoading(false)
-      } 
+         } 
+         
 
   const res = useSelector(state => state.allDeliver.addDelivery)
 

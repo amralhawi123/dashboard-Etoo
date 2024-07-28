@@ -1,10 +1,92 @@
-import React, { useState } from 'react'
-import product1 from "../../imgs/product-01.png"
-import product2 from "../../imgs/product-02.png"
-import product3 from "../../imgs/product-03.png"
-import product4 from "../../imgs/product-04.png" 
+import { useEffect, useState } from 'react'
+import { allProductSearch, getAllProducts, getAllProductsLimitInPage, getAllProductsPage } from '../../redux/actions/ProductsAction'
+import { useDispatch, useSelector } from 'react-redux' 
 const AllProductsHook = () => { 
+    const token = localStorage.getItem("token")
+    const dispatch = useDispatch()
+    const [loading,setLoading] = useState(true) 
+    const [loadingSearch,setLoadingSearch] = useState(true) 
+    const [page,setPage] = useState(1)
+    const showNumberProducts = localStorage.getItem("showNumberProducts")
 
+    useEffect( () => {
+        const getData = async ()=>{
+            const formData= new FormData()
+            formData.append("token", token)
+            setLoading(true)
+            await dispatch(getAllProducts(formData)) 
+            setLoading(false)
+        }
+        getData()   
+            getLimit(showNumberProducts)
+    }, [])
+
+    const OnChangeShowNumber= (e) => { 
+        localStorage.setItem("showNumberProducts", e.target.value)
+        setTimeout(() => {
+            window.location.reload(false)
+        }, 1000);
+    }
+    const [searchWord, setsearchWord] = useState('')
+         
+    const OnChangeSearch =(e) => {
+       localStorage.setItem("wordProduct", e.target.value)
+       setsearchWord(e.target.value)
+    }
+    let word = ""
+    const getStorag =() => {
+        if(localStorage.getItem("wordProduct") != null && localStorage.getItem("wordProduct") !== ''){
+        if(showNumberProducts){
+            word = `/search/${localStorage.getItem("wordProduct")}?perpage=${showNumberProducts}&page=${page}`
+        }else{
+            word = `/search/${localStorage.getItem("wordProduct")}?perpage=5&page=1`
+        }
+        } else {
+        if(showNumberProducts){
+            word =`?perpage=${showNumberProducts}&page=${page}`
+            localStorage.removeItem("wordProduct")
+        } else {
+            word =`?perpage=5&page=${page}`
+            localStorage.removeItem("wordProduct")
+        }
+        }
+    }
+
+    // at click pagination
+    const getPage = async(page) => {
+        setPage(page)
+    const formData= new FormData()
+    formData.append("token", token)
+        await dispatch(getAllProductsPage(page,showNumberProducts,formData))  
+    }
+
+    // limit delvery
+    const getLimit = async(limit) => {
+        const formData= new FormData()
+        formData.append("token", token)
+            await dispatch(getAllProductsLimitInPage(limit,formData)) 
+        }
+
+const getOrders = async() => {
+    getStorag()
+        const formData= new FormData()
+        formData.append("token", token)
+        setLoadingSearch(true)
+        await dispatch(allProductSearch(word,formData))
+        setLoadingSearch(false)
+    }
+
+    useEffect(() => {
+        setTimeout(() => { 
+                getOrders() 
+    }, 1200);
+    }, [searchWord,page])
+
+    let showWord = ""
+    if(localStorage.getItem("wordProduct") != null){
+    showWord = localStorage.getItem("wordProduct")
+    }
+        
     function headData(name) {
         return { name};
       }
@@ -19,23 +101,38 @@ const AllProductsHook = () => {
           headData('product Price Old'), 
           headData('Action'), 
       ];
-    function createData(id,image,prodName,prodDes,catName,prodPrice, prodOldPrice,action) {
-        return { id ,image,prodName,prodDes,catName,prodPrice, prodOldPrice,action};
-      }
+      const res = useSelector(state => state.ProductsReducer.products) 
 
-      const rows = [
-        createData(1,<img style={{marginRight:"8px", width:"60px"}} src={product1} alt="brand1"/>,
-            'Apple Watch Series 7',"Electronics", "$269", 22, "$45"),
-        createData(2,<img style={{marginRight:"8px", width:"60px"}} src={product2} alt="brand2"/>,
-            'Macbook Pro M1',"Electronics", "$368", 54, "$36"),
-        createData(3,<img style={{marginRight:"8px", width:"60px"}} src={product3} alt="brand3"/>,
-            'Dell Inspiron 15',"Electronics", "$768", 34, "$64"),
-        createData(4,<img style={{marginRight:"8px", width:"60px"}} src={product4} alt="brand4"/>,
-            "HP Probook 450", "Electronics", "$456",20, "$64"),
-      ];
+      let allProducts = []
+      try {      
+         if(res.data){
+            allProducts = res.data
+         }else{
+            allProducts= []
+          }
+      } catch (error) {
+         
+      }
+  
+  let pageCount = []
+  try{
+      if(res.pagination){
+          pageCount = res.pagination["last_page"]
+  }else{
+      pageCount=[]
+  }
+  }catch(e){} 
+  
+  let totalnumberProducts = []
+  try{
+      if(res.pagination){
+        totalnumberProducts = res.pagination.total
+  }else{
+    totalnumberProducts=[]
+  }
+  }catch(e){}
 
       const handleOpen =(e) => {  
-        console.log(e)
         hideAllMenus()
         let box = document.getElementById(e) 
         if (box.style.display === "block") { 
@@ -61,7 +158,9 @@ const AllProductsHook = () => {
   });
 
 
-  return [rows,head,handleOpen ]
+  return [allProducts,head,handleOpen,pageCount,totalnumberProducts,
+    loading,getPage,OnChangeShowNumber,showNumberProducts,showWord,OnChangeSearch
+   ]
 }
 
 export default AllProductsHook

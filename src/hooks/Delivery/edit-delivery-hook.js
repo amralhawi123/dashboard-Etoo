@@ -12,7 +12,6 @@ const EditDeliveryHook = () => {
   const [transTypeEdit,setTransType] = useState('')
   const [phoneEdit,setPhone] = useState('')
   const [noteEdit,setNote] = useState('')
-  const [image,setImagee] = useState('')
   const [selectedFile, setselectedFile] = useState(null)
   const [LoadingData, setLoadingData] = useState(true)
   const [id, setId] = useState()
@@ -35,7 +34,6 @@ const EditDeliveryHook = () => {
  }
  const onImageChangeEdit =(e) => {
   if(e.target.files && e.target.files[0]){
-    setImagee(URL.createObjectURL(e.target.files[0]))
      setselectedFile(e.target.files[0])
   }
 }

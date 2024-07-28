@@ -1,9 +1,51 @@
-import React, { useState } from 'react'
+import  { useEffect, useState } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
+import { getAllMaps, getAllMapsLimitInPage, getAllMapsPage } from '../../redux/actions/MapsAction'
 
 const AllMapsHook = () => { 
+    const token = localStorage.getItem("token")
+    const dispatch = useDispatch()
 
-    function headData(name,iconUp,iconDown) {
-        return { name,iconUp, iconDown };
+    const [loading,setLoading] = useState(true)  
+    const [loadingSearch,setLoadingSearch] = useState(true)  
+    // const [page,setPage] = useState(1)  
+    const showNumberMaps = localStorage.getItem("showNumberMaps") 
+
+    useEffect( () => {
+        const getData = async ()=>{
+            const formData= new FormData()
+            formData.append("token", token)
+            setLoading(true)
+            await dispatch(getAllMaps(formData)) 
+            setLoading(false)
+        }
+        getData()         
+                getLimit(showNumberMaps)
+    }, [])
+
+    const OnChangeShowNumber= (e) => { 
+        localStorage.setItem("showNumberMaps", e.target.value)
+        setTimeout(() => {
+            window.location.reload(false)
+        }, 1000);
+    }
+
+    // limit delvery
+    const getLimit = async(limit) => {
+        const formData= new FormData()
+        formData.append("token", token)
+            await dispatch(getAllMapsLimitInPage(limit,formData)) 
+        }
+    // at click pagination
+    const getPage = async(page) => {
+        // setPage( page)
+        const formData= new FormData()
+        formData.append("token", token)
+            await dispatch(getAllMapsPage(showNumberMaps,page,formData))  
+        }
+    
+    function headData(name) {
+        return { name };
       }
 
 		
@@ -16,22 +58,39 @@ const AllMapsHook = () => {
           ), 
           headData('Admin Unit Name'
           ), 
-          headData('Price'
-          ), 
           headData('Action'
           ), 
       ];
-    function createData(id,statsName, locationName,admainName,price) {
-        return { id, statsName, locationName,admainName,price};
-      }
+      const maps = useSelector(state => state.MapsReducer.maps) 
 
-    const rows = [
-        createData(1,"Amr", "cairo, Naser City", "test",300),
-        createData(2,"Amr", "cairo, Naser City", "test",300),
-        createData(3,"Amr", "cairo, Naser City", "test",300),
-        createData(4,"Amr", "cairo, Naser City", "test",300),
-        createData(5,"Amr", "cairo, Naser City", "test",300 ),
-      ];
+      let allMaps = []
+      try {      
+         if(maps.data){
+            allMaps = maps.data
+         }else{
+            allMaps= []
+          }
+      } catch (error) {
+         
+      }
+  
+  let pageCount = []
+  try{
+      if(maps.pagination){
+          pageCount = maps.pagination["last_page"]
+  }else{
+      pageCount=[]
+  }
+  }catch(e){} 
+  
+  let totalnumberMaps = []
+  try{
+      if(maps.pagination){
+        totalnumberMaps = maps.pagination.total
+  }else{
+    totalnumberMaps=[]
+  }
+  }catch(e){}
 
       const handleOpen =(e) => {  
         hideAllMenus()
@@ -59,7 +118,9 @@ const AllMapsHook = () => {
   });
 
 
-  return [rows,head,handleOpen ]
+  return [totalnumberMaps,head,handleOpen,pageCount,allMaps,loading,
+    showNumberMaps,OnChangeShowNumber,getPage
+   ]
 }
 
 export default AllMapsHook

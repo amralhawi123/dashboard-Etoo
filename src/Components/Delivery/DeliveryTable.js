@@ -199,7 +199,9 @@ const DeliveryTable = () => {
                   </div>
                    </TableCell>
                 </TableRow>
-              )) : <div>There is no data found</div>
+              )) :     <div class="no-data-container">
+              <p class="no-data-message">There is No Data Found</p>
+          </div>
             : <Spinner animation="border" variant="primary" className='m-3'/>}
             </TableBody>
           </Table>

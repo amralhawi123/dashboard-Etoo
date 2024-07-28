@@ -3,7 +3,7 @@ import React from 'react';
 import DarkModeHook from '../../hooks/utility/dark-mode-hook';
 
 const DarkMode= () =>{ 
-    const [darkMode,setDarkMode] = DarkModeHook()
+    const [darkMode,OnChangeDarkMode] = DarkModeHook()
 
     return (
         <div className="toggle-container">
@@ -11,7 +11,7 @@ const DarkMode= () =>{
                 type="checkbox"
                 id="dark-mode-toggle"
                 checked={darkMode}
-                onChange={() => setDarkMode(!darkMode)}
+                onChange={OnChangeDarkMode}
             />
             <label htmlFor="dark-mode-toggle" className="toggle-label"></label>
         </div>
